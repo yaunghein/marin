@@ -14,13 +14,13 @@ export default function Home() {
           id="leaf-container"
           className="relative top-0 left-0 right-0 w-full h-[300dvh]"
         >
-          <div className="w-full h-dvh bg-indigo-500/10 grid place-items-center">
+          <div className="w-full h-dvh grid place-items-center">
             <div className="text-4xl font-bold uppercase">About & Contact</div>
           </div>
-          <div className="w-full h-dvh bg-indigo-500/20 grid place-items-center">
+          <div className="w-full h-dvh border-y-2 border-black grid place-items-center">
             <div className="text-4xl font-bold uppercase">Projects</div>
           </div>
-          <div className="w-full h-dvh bg-indigo-500/30 grid place-items-center">
+          <div className="w-full h-dvh grid place-items-center">
             <div className="text-4xl font-bold uppercase">Hero</div>
           </div>
           <div
