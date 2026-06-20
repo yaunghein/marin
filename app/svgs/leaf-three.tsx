@@ -22,8 +22,8 @@ export default function LeafThree({
 
   return (
     <svg
-      width="1569"
-      height="2159"
+      width="100%"
+      height="100%"
       viewBox="0 0 1569 2159"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
