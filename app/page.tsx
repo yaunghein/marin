@@ -22,12 +22,7 @@ export default function Home() {
             <div className="text-4xl font-bold uppercase">Projects</div>
           </div>
           <SectionHero />
-          <div
-            id="ground"
-            className="absolute left-1/2 -translate-x-1/2 bottom-10 w-16.5 aspect-[1.74/1]"
-          >
-            <Ground />
-          </div>
+
           <div className="absolute left-1/2 translate-x-[-92%] bottom-12 w-40 aspect-[1/1.08]">
             <LeafZero />
           </div>
@@ -54,6 +49,12 @@ export default function Home() {
             className="absolute left-1/2 translate-x-[-33%] bottom-10 h-[265vh] aspect-[1/2.64]"
           >
             <LeafFour animationEnd={1} />
+          </div>
+          <div
+            id="ground"
+            className="absolute left-1/2 -translate-x-1/2 bottom-10 w-16.5 aspect-[1.74/1]"
+          >
+            <Ground />
           </div>
         </div>
       </ScrollReverseContainer>
