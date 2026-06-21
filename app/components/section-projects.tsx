@@ -19,6 +19,7 @@ export default function SectionProjects() {
             src="/images/project-placeholder.png"
             alt="Exit case study — woman kneeling beside a vintage fan"
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
 
