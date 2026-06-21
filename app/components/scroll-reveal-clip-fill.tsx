@@ -5,7 +5,7 @@ import {
   type LeafAnimationTiming,
   useScrollContainerProgress,
 } from '@/app/hooks/use-scroll-container-progress'
-import { useId } from 'react'
+import { CSSProperties, useId } from 'react'
 
 type ScrollRevealClipFillProps = LeafAnimationTiming & {
   viewBox: string
@@ -16,6 +16,10 @@ type ScrollRevealClipFillProps = LeafAnimationTiming & {
   fill?: string
   stroke?: string
   strokeWidth?: number
+  /** Organic blob shape on hover. Must share the same path structure as pathD. */
+  hoverPathD?: string
+  hoverFill?: string
+  hoverStroke?: string
   className?: string
 }
 
@@ -31,6 +35,9 @@ export default function ScrollRevealClipFill({
   fill = 'currentColor',
   stroke,
   strokeWidth,
+  hoverPathD,
+  hoverFill,
+  hoverStroke,
   className,
 }: ScrollRevealClipFillProps) {
   const progress = useScrollContainerProgress()
@@ -40,6 +47,7 @@ export default function ScrollRevealClipFill({
     fillDuration,
   })
   const clipPathId = useId().replace(/:/g, '')
+  const morphPathId = useId().replace(/:/g, '')
 
   return (
     <svg
@@ -50,7 +58,22 @@ export default function ScrollRevealClipFill({
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-hidden="true"
+      style={
+        {
+          '--blob-fill': fill,
+          '--blob-stroke': stroke ?? fill,
+          '--blob-fill-hover': hoverFill ?? fill,
+          '--blob-stroke-hover': hoverStroke ?? hoverFill ?? stroke ?? fill,
+        } as CSSProperties
+      }
     >
+      {hoverPathD ? (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `.group:hover .blob-morph-path-${morphPathId}{d:path('${hoverPathD}')}`,
+          }}
+        />
+      ) : null}
       <defs>
         <clipPath id={clipPathId}>
           <circle cx={clipCx} cy={clipCy} r={clipRadius * fillProgress} />
@@ -58,10 +81,11 @@ export default function ScrollRevealClipFill({
       </defs>
       <path
         d={pathD}
-        fill={fill}
-        stroke={stroke}
+        fill="var(--blob-fill)"
+        stroke="var(--blob-stroke)"
         strokeWidth={strokeWidth}
         clipPath={`url(#${clipPathId})`}
+        className={hoverPathD ? `blob-morph-path blob-morph-path-${morphPathId}` : undefined}
       />
     </svg>
   )
