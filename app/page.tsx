@@ -19,7 +19,7 @@ export default function Home() {
         >
           <SectionContact />
           <SectionProjects />
-          <SectionHero />
+          <SectionHero brandDesignerRevealAt={0.06} />
 
           <div className="pointer-events-none absolute left-1/2 translate-x-[-92%] bottom-12 w-40 aspect-[1/1.08]">
             <LeafZero />

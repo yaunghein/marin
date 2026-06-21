@@ -36,3 +36,99 @@ body::-webkit-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+:root {
+  --string-split-easing: cubic-bezier(0.86, 0, 0.31, 1);
+}
+
+[data-string='split']:not(.-splitted) {
+  opacity: 0;
+}
+
+.-splitted {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.-s-line {
+  display: block;
+  width: 100%;
+}
+
+/* char mode — mask per word, slide each character */
+[data-split-unit='char'].-splitted .-s-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: inherit;
+  contain: layout style;
+}
+
+[data-split-unit='char'].-splitted .-s-char {
+  display: inline-block;
+  transform: translate3d(0, 120%, 0);
+  backface-visibility: hidden;
+  transition: transform var(--string-split-duration, 0.9s)
+    var(--string-split-easing);
+  transition-delay: calc(
+    (var(--char-start, var(--char-index, 0)) / 5) *
+      var(--string-split-stagger, 0.3s)
+  );
+}
+
+[data-split-unit='char'].-splitted.is-scroll-revealed .-s-char {
+  transform: translate3d(0, 0, 0);
+}
+
+/* word mode — slide each word as a unit */
+[data-split-unit='word'].-splitted .-s-word {
+  display: inline-block;
+  vertical-align: top;
+  line-height: inherit;
+  transform: translate3d(0, 120%, 0);
+  backface-visibility: hidden;
+  transition: transform var(--string-split-duration, 0.9s)
+    var(--string-split-easing);
+  transition-delay: calc(
+    (var(--word-index, 0) / 5) * var(--string-split-stagger, 0.3s)
+  );
+}
+
+[data-split-unit='word'].-splitted.is-scroll-revealed .-s-word {
+  transform: translate3d(0, 0, 0);
+}
+
+/* line mode — same word masks as char, stagger by line */
+[data-split-unit='line'].-splitted {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+[data-split-unit='line'].-splitted .-s-line {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+[data-split-unit='line'].-splitted .-s-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: inherit;
+  contain: layout style;
+}
+
+[data-split-unit='line'].-splitted .-s-char {
+  display: inline-block;
+  transform: translate3d(0, 120%, 0);
+  backface-visibility: hidden;
+  transition: transform var(--string-split-duration, 0.9s)
+    var(--string-split-easing);
+  transition-delay: calc(
+    (var(--line-index, 0) / 5) * var(--string-split-stagger, 0.3s)
+  );
+}
+
+[data-split-unit='line'].-splitted.is-scroll-revealed .-s-char {
+  transform: translate3d(0, 0, 0);
+}

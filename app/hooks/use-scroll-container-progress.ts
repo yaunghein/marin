@@ -1,16 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 function clampProgress(value: number) {
   return Math.min(Math.max(value, 0), 1)
 }
 
-function easeOutCubic(value: number) {
-  return 1 - Math.pow(1 - value, 3)
-}
-
-function getScrollProgress(container: HTMLElement) {
+function readProgress(container: HTMLElement) {
   const rect = container.getBoundingClientRect()
   const scrollableDistance = container.offsetHeight - window.innerHeight
 
@@ -21,43 +17,81 @@ function getScrollProgress(container: HTMLElement) {
   return clampProgress(-rect.top / scrollableDistance)
 }
 
-export function useScrollContainerProgress() {
-  const [progress, setProgress] = useState(0)
-  const frameRef = useRef<number | null>(null)
+let progress = 0
+let rafId: number | null = null
+let isListening = false
+const listeners = new Set<() => void>()
 
-  useEffect(() => {
-    const container = document.getElementById('scroll-container')
+function notify() {
+  for (const listener of listeners) {
+    listener()
+  }
+}
 
-    if (!container) {
-      return
-    }
+function updateProgress() {
+  rafId = null
 
-    const updateProgress = () => {
-      frameRef.current = null
-      setProgress(getScrollProgress(container))
-    }
+  const container = document.getElementById('scroll-container')
+  if (!container) {
+    return
+  }
 
-    const requestUpdate = () => {
-      if (frameRef.current === null) {
-        frameRef.current = window.requestAnimationFrame(updateProgress)
-      }
-    }
+  const next = readProgress(container)
+  if (next === progress) {
+    return
+  }
 
-    requestUpdate()
-    window.addEventListener('scroll', requestUpdate, { passive: true })
-    window.addEventListener('resize', requestUpdate)
+  progress = next
+  notify()
+}
 
-    return () => {
-      window.removeEventListener('scroll', requestUpdate)
-      window.removeEventListener('resize', requestUpdate)
+function requestUpdate() {
+  if (rafId === null) {
+    rafId = window.requestAnimationFrame(updateProgress)
+  }
+}
 
-      if (frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current)
-      }
-    }
-  }, [])
+function ensureListening() {
+  if (isListening) {
+    return
+  }
 
+  isListening = true
+  requestUpdate()
+  window.addEventListener('scroll', requestUpdate, { passive: true })
+  window.addEventListener('resize', requestUpdate)
+}
+
+function subscribe(listener: () => void) {
+  ensureListening()
+  listeners.add(listener)
+
+  return () => {
+    listeners.delete(listener)
+  }
+}
+
+function getSnapshot() {
   return progress
+}
+
+/** Subscribe to scroll progress without triggering React re-renders. */
+export function subscribeScrollProgress(
+  callback: (value: number) => void,
+): () => void {
+  callback(progress)
+
+  return subscribe(() => {
+    callback(progress)
+  })
+}
+
+export function useScrollContainerProgress() {
+  return useSyncExternalStore(subscribe, getSnapshot, () => 0)
+}
+
+function easeOutCubic(value: number) {
+  return 1 - Math.pow(1 - value, 3)
 }
 
 export type LeafAnimationTiming = {
@@ -67,7 +101,7 @@ export type LeafAnimationTiming = {
 }
 
 export function getLeafAnimationProgress(
-  progress: number,
+  progressValue: number,
   {
     animationStart = 0,
     animationEnd = 1,
@@ -76,7 +110,7 @@ export function getLeafAnimationProgress(
 ) {
   const animationRange = Math.max(animationEnd - animationStart, 0.001)
   const localProgress = clampProgress(
-    (progress - animationStart) / animationRange,
+    (progressValue - animationStart) / animationRange,
   )
   const fillStart = clampProgress(1 - fillDuration)
   const stemDuration = fillStart * 0.78
@@ -85,9 +119,9 @@ export function getLeafAnimationProgress(
   const leafProgress = clampProgress(
     (localProgress - stemDuration) / leafDuration,
   )
-  const fillProgress = easeOutCubic(
-    clampProgress((localProgress - fillStart) / Math.max(fillDuration, 0.001)),
-  )
+  const fillProgress = getClipFillRevealProgress(localProgress, {
+    fillDuration,
+  })
 
   return {
     stemProgress,
@@ -96,4 +130,33 @@ export function getLeafAnimationProgress(
     stemOpacity: stemProgress > 0.01 ? 1 : 0,
     leafOpacity: leafProgress > 0.01 ? 1 : 0,
   }
+}
+
+export function getClipFillRevealProgress(
+  localProgress: number,
+  { fillDuration = 1 }: Pick<LeafAnimationTiming, 'fillDuration'> = {},
+) {
+  const fillStart = clampProgress(1 - fillDuration)
+
+  return easeOutCubic(
+    clampProgress(
+      (localProgress - fillStart) / Math.max(fillDuration, 0.001),
+    ),
+  )
+}
+
+export function getScrollClipFillProgress(
+  progressValue: number,
+  {
+    animationStart = 0,
+    animationEnd = 1,
+    fillDuration = 1,
+  }: LeafAnimationTiming = {},
+) {
+  const animationRange = Math.max(animationEnd - animationStart, 0.001)
+  const localProgress = clampProgress(
+    (progressValue - animationStart) / animationRange,
+  )
+
+  return getClipFillRevealProgress(localProgress, { fillDuration })
 }

@@ -1,21 +1,11 @@
 'use client'
 
+import { subscribeScrollProgress } from '@/app/hooks/use-scroll-container-progress'
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 
 function clampProgress(value: number) {
   return Math.min(Math.max(value, 0), 1)
-}
-
-function getScrollProgress(container: HTMLElement) {
-  const rect = container.getBoundingClientRect()
-  const scrollableDistance = container.offsetHeight - window.innerHeight
-
-  if (scrollableDistance <= 0) {
-    return 1
-  }
-
-  return clampProgress(-rect.top / scrollableDistance)
 }
 
 type ScrollReverseContainerProps = {
@@ -28,21 +18,15 @@ export default function ScrollReverseContainer({
   finishOffset = 0,
 }: ScrollReverseContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const frameRef = useRef<number | null>(null)
   const [translateY, setTranslateY] = useState(0)
 
   useEffect(() => {
-    const scrollContainer = document.getElementById('scroll-container')
     const reverseContainer = containerRef.current
-
-    if (!scrollContainer || !reverseContainer) {
+    if (!reverseContainer) {
       return
     }
 
-    const updatePosition = () => {
-      frameRef.current = null
-
-      const progress = getScrollProgress(scrollContainer)
+    const updatePosition = (progress: number) => {
       const adjustedProgress = clampProgress(
         progress / Math.max(1 - finishOffset, 0.001),
       )
@@ -51,24 +35,7 @@ export default function ScrollReverseContainer({
       setTranslateY(Math.max(reverseDistance, 0) * adjustedProgress)
     }
 
-    const requestUpdate = () => {
-      if (frameRef.current === null) {
-        frameRef.current = window.requestAnimationFrame(updatePosition)
-      }
-    }
-
-    requestUpdate()
-    window.addEventListener('scroll', requestUpdate, { passive: true })
-    window.addEventListener('resize', requestUpdate)
-
-    return () => {
-      window.removeEventListener('scroll', requestUpdate)
-      window.removeEventListener('resize', requestUpdate)
-
-      if (frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current)
-      }
-    }
+    return subscribeScrollProgress(updatePosition)
   }, [finishOffset])
 
   const style = {
@@ -82,7 +49,7 @@ export default function ScrollReverseContainer({
     <div
       ref={containerRef}
       id="scroll-reverse-container"
-      className="fixed bottom-0 left-0 right-0 h-[300dvh]"
+      className="fixed bottom-0 left-0 right-0 h-[300dvh] will-change-transform"
       style={style}
     >
       {children}

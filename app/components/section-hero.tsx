@@ -1,6 +1,15 @@
-export default function SectionHero() {
+import ScrollRevealSplitText from '@/app/components/scroll-reveal-split-text'
+
+type SectionHeroProps = {
+  /** Scroll progress (0–1) on `#scroll-container` before role text appears */
+  brandDesignerRevealAt?: number
+}
+
+export default function SectionHero({
+  brandDesignerRevealAt = 0.12,
+}: SectionHeroProps) {
   return (
-    <div className="w-full h-dvh grid place-items-center pt-32">
+    <div className="w-full h-dvh grid place-items-center">
       <div className="relative">
         <div className="absolute -top-14 left-1/2 -translate-x-1/2 text-[6.25rem] font-didone tracking-[-0.375rem] leading-none">
           Hi. I’m
@@ -15,13 +24,19 @@ export default function SectionHero() {
           岡田真凜です。
         </div>
 
-        <div className="absolute -top-56 -right-32 max-w-58">
-          <div className="text-7xl tracking-[-0.27rem] leading-none font-didone">
+        <div className="absolute -top-64 -right-32 max-w-58">
+          <ScrollRevealSplitText
+            revealAt={brandDesignerRevealAt}
+            className="text-7xl tracking-[-0.27rem] leading-none font-didone"
+          >
             Brand Designer
-          </div>
-          <div className="mt-2 text-2xl tracking-[-0.06rem] leading-none">
+          </ScrollRevealSplitText>
+          <ScrollRevealSplitText
+            revealAt={brandDesignerRevealAt}
+            className="mt-3 text-2xl tracking-[-0.06rem] leading-none"
+          >
             ブランドデザイナー
-          </div>
+          </ScrollRevealSplitText>
         </div>
       </div>
     </div>
