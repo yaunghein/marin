@@ -1,0 +1,20 @@
+export const caseStudyButtonPath =
+  'M177.157 72.1603C176.578 73.4834 153.395 90.3747 123.885 86.3817C94.3751 82.3888 71.3754 104.382 43.2691 92.2455C22.1962 83.1458 0.292478 66.1255 7.36119 45.3207C14.4299 24.5159 39.0249 15.3258 46.7165 12.4728C54.408 9.61971 99.1423 -0.331414 123.885 12.1074C137.375 18.8888 131.875 23.3887 165.849 30.6351C199.824 37.8815 177.735 70.8372 177.157 72.1603Z'
+
+export const caseStudyButtonHoverPath =
+  'M173 68C168 82 142 88 115 85C88 82 65 96 40 86C18 77 3 58 9 40C15 22 36 11 48 9C60 7 98 4 126 13C140 19 136 27 160 33C184 39 178 66 173 68Z'
+
+export const caseStudyBlobViewBox = '0 0 191 102'
+
+export const caseStudyBlobClip = {
+  cx: 100,
+  cy: 52,
+  radius: 120,
+} as const
+
+export const caseStudyBlobColors = {
+  fill: '#4A3A30',
+  stroke: '#4A3A30',
+  hoverFill: '#647C4C',
+  hoverStroke: '#647C4C',
+} as const

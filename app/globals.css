@@ -140,6 +140,10 @@ body::-webkit-scrollbar {
     stroke 0.45s cubic-bezier(0.86, 0, 0.31, 1);
 }
 
+.blob-clip-circle {
+  transition: r 1.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .group:hover .blob-morph-path {
   fill: var(--blob-fill-hover);
   stroke: var(--blob-stroke-hover);
