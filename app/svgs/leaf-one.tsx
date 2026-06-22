@@ -3,21 +3,42 @@
 import {
   getLeafAnimationProgress,
   type LeafAnimationTiming,
-  useScrollContainerProgress,
 } from '@/app/hooks/use-scroll-container-progress'
+import { useScrollProgressEffect } from '@/app/hooks/use-scroll-progress-effect'
+import { useRef } from 'react'
 
 export default function LeafOne({
   animationStart = 0,
   animationEnd = 1,
   fillDuration = 0.18,
 }: LeafAnimationTiming) {
-  const progress = useScrollContainerProgress()
-  const { stemProgress, leafProgress, fillProgress, stemOpacity, leafOpacity } =
-    getLeafAnimationProgress(progress, {
-      animationStart,
-      animationEnd,
-      fillDuration,
-    })
+  const fillCircleRef = useRef<SVGCircleElement>(null)
+  const stemRef = useRef<SVGPathElement>(null)
+  const leafRef = useRef<SVGPathElement>(null)
+
+  useScrollProgressEffect(
+    (progress) => {
+      const { stemProgress, leafProgress, fillProgress, stemOpacity, leafOpacity } =
+        getLeafAnimationProgress(progress, {
+          animationStart,
+          animationEnd,
+          fillDuration,
+        })
+
+      fillCircleRef.current?.setAttribute('r', String(150 * fillProgress))
+
+      if (stemRef.current) {
+        stemRef.current.style.strokeDashoffset = String(1 - stemProgress)
+        stemRef.current.style.opacity = String(stemOpacity)
+      }
+
+      if (leafRef.current) {
+        leafRef.current.style.strokeDashoffset = String(1 - leafProgress)
+        leafRef.current.style.opacity = String(leafOpacity)
+      }
+    },
+    [animationStart, animationEnd, fillDuration],
+  )
 
   return (
     <svg
@@ -29,7 +50,7 @@ export default function LeafOne({
     >
       <defs>
         <clipPath id="leaf-one-fill-reveal">
-          <circle cx="326" cy="17" r={150 * fillProgress} />
+          <circle ref={fillCircleRef} cx="326" cy="17" r="0" />
         </clipPath>
       </defs>
       <path
@@ -38,6 +59,7 @@ export default function LeafOne({
         clipPath="url(#leaf-one-fill-reveal)"
       />
       <path
+        ref={stemRef}
         d="M3.0225 509.902C3.02069 385.168 -1.66843 322.572 139.164 266.168C279.996 209.764 222.617 14.2093 344.164 15.1681"
         stroke="#647C4C"
         strokeWidth="6"
@@ -45,10 +67,11 @@ export default function LeafOne({
         strokeLinejoin="round"
         pathLength="1"
         strokeDasharray="1"
-        strokeDashoffset={1 - stemProgress}
-        opacity={stemOpacity}
+        strokeDashoffset="1"
+        opacity="0"
       />
       <path
+        ref={leafRef}
         d="M326.752 16.8115C327.213 15.8732 353.506 7.49847 362.805 4.45884C372.104 1.4192 394.859 2.15338 412.536 16.2454C423.748 25.1834 447.564 52.6797 448.364 53.1999C449.165 53.7201 430.952 59.5979 421.378 64.4744C400.899 74.9048 378.334 76.0193 363.29 62.5635C354.996 55.1448 342.814 24.2866 338.874 21.5366C334.935 18.7866 326.29 17.7498 326.752 16.8115Z"
         stroke="#647C4C"
         strokeWidth="6"
@@ -56,8 +79,8 @@ export default function LeafOne({
         strokeLinejoin="round"
         pathLength="1"
         strokeDasharray="1"
-        strokeDashoffset={1 - leafProgress}
-        opacity={leafOpacity}
+        strokeDashoffset="1"
+        opacity="0"
       />
     </svg>
   )

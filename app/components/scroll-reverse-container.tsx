@@ -1,7 +1,7 @@
 'use client'
 
-import { subscribeScrollProgress } from '@/app/hooks/use-scroll-container-progress'
-import { useEffect, useRef, useState } from 'react'
+import { useScrollProgressEffect } from '@/app/hooks/use-scroll-progress-effect'
+import { useRef } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 
 function clampProgress(value: number) {
@@ -18,28 +18,24 @@ export default function ScrollReverseContainer({
   finishOffset = 0,
 }: ScrollReverseContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [translateY, setTranslateY] = useState(0)
 
-  useEffect(() => {
+  useScrollProgressEffect((progress) => {
     const reverseContainer = containerRef.current
     if (!reverseContainer) {
       return
     }
 
-    const updatePosition = (progress: number) => {
-      const adjustedProgress = clampProgress(
-        progress / Math.max(1 - finishOffset, 0.001),
-      )
-      const reverseDistance = reverseContainer.offsetHeight - window.innerHeight
+    const adjustedProgress = clampProgress(
+      progress / Math.max(1 - finishOffset, 0.001),
+    )
+    const reverseDistance = reverseContainer.offsetHeight - window.innerHeight
+    const translateY = Math.max(reverseDistance, 0) * adjustedProgress
 
-      setTranslateY(Math.max(reverseDistance, 0) * adjustedProgress)
-    }
-
-    return subscribeScrollProgress(updatePosition)
+    reverseContainer.style.setProperty('--scroll-reverse-y', `${translateY}px`)
   }, [finishOffset])
 
   const style = {
-    '--scroll-reverse-y': `${translateY}px`,
+    '--scroll-reverse-y': '0px',
     transform: 'translate3d(0, var(--scroll-reverse-y), 0)',
   } satisfies CSSProperties & {
     '--scroll-reverse-y': string

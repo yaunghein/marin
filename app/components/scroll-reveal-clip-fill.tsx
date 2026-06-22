@@ -4,8 +4,9 @@ import BlobMorphFill from '@/app/components/blob-morph-fill'
 import {
   getScrollClipFillProgress,
   type LeafAnimationTiming,
-  useScrollContainerProgress,
 } from '@/app/hooks/use-scroll-container-progress'
+import { useScrollProgressEffect } from '@/app/hooks/use-scroll-progress-effect'
+import { useRef } from 'react'
 
 type ScrollRevealClipFillProps = LeafAnimationTiming & {
   viewBox: string
@@ -40,16 +41,28 @@ export default function ScrollRevealClipFill({
   hoverStroke,
   className,
 }: ScrollRevealClipFillProps) {
-  const progress = useScrollContainerProgress()
-  const fillProgress = getScrollClipFillProgress(progress, {
-    animationStart,
-    animationEnd,
-    fillDuration,
-  })
+  const clipCircleRef = useRef<SVGCircleElement>(null)
+
+  useScrollProgressEffect(
+    (progress) => {
+      const fillProgress = getScrollClipFillProgress(progress, {
+        animationStart,
+        animationEnd,
+        fillDuration,
+      })
+
+      clipCircleRef.current?.setAttribute(
+        'r',
+        String(clipRadius * fillProgress),
+      )
+    },
+    [animationStart, animationEnd, fillDuration, clipRadius],
+  )
 
   return (
     <BlobMorphFill
-      fillProgress={fillProgress}
+      fillProgress={0}
+      clipCircleRef={clipCircleRef}
       viewBox={viewBox}
       clipCx={clipCx}
       clipCy={clipCy}

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 import LenisProvider from './components/lenis-provider'
 import StringTuneProvider from './components/string-tune-provider'
+import 'lenis/dist/lenis.css'
 import './globals.css'
 
 const satoshi = localFont({
@@ -89,7 +90,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${satoshi.variable} ${ppRightDidone.variable} h-full antialiased`}
+      className={`${satoshi.variable} ${ppRightDidone.variable} min-h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <LenisProvider>

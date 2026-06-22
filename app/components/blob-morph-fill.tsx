@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, useId } from 'react'
+import { CSSProperties, RefObject, useId } from 'react'
 
 type BlobMorphFillProps = {
   fillProgress: number
@@ -17,6 +17,7 @@ type BlobMorphFillProps = {
   hoverStroke?: string
   className?: string
   clipTransition?: boolean
+  clipCircleRef?: RefObject<SVGCircleElement | null>
   /** Rendered inside the same clip path as the blob shape. */
   label?: string
 }
@@ -36,11 +37,14 @@ export default function BlobMorphFill({
   hoverStroke,
   className,
   clipTransition = false,
+  clipCircleRef,
   label,
 }: BlobMorphFillProps) {
   const clipPathId = useId().replace(/:/g, '')
   const morphPathId = useId().replace(/:/g, '')
-  const [viewMinX, viewMinY, viewWidth, viewHeight] = viewBox.split(/\s+/).map(Number)
+  const [viewMinX, viewMinY, viewWidth, viewHeight] = viewBox
+    .split(/\s+/)
+    .map(Number)
   const clipGroupProps = { clipPath: `url(#${clipPathId})` }
   const clipCircleClass = clipTransition ? 'blob-clip-circle' : undefined
 
@@ -72,9 +76,10 @@ export default function BlobMorphFill({
       <defs>
         <clipPath id={clipPathId}>
           <circle
+            ref={clipCircleRef}
             cx={clipCx}
             cy={clipCy}
-            r={clipRadius * fillProgress}
+            r={clipCircleRef ? 0 : clipRadius * fillProgress}
             className={clipCircleClass}
           />
         </clipPath>
@@ -86,7 +91,9 @@ export default function BlobMorphFill({
           stroke="var(--blob-stroke)"
           strokeWidth={strokeWidth}
           className={
-            hoverPathD ? `blob-morph-path blob-morph-path-${morphPathId}` : undefined
+            hoverPathD
+              ? `blob-morph-path blob-morph-path-${morphPathId}`
+              : undefined
           }
         />
         {label ? (

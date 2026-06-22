@@ -7,14 +7,13 @@ function clampProgress(value: number) {
 }
 
 function readProgress(container: HTMLElement) {
-  const rect = container.getBoundingClientRect()
   const scrollableDistance = container.offsetHeight - window.innerHeight
 
   if (scrollableDistance <= 0) {
     return 1
   }
 
-  return clampProgress(-rect.top / scrollableDistance)
+  return clampProgress(window.scrollY / scrollableDistance)
 }
 
 let progress = 0
@@ -60,6 +59,7 @@ function ensureListening() {
   requestUpdate()
   window.addEventListener('scroll', requestUpdate, { passive: true })
   window.addEventListener('resize', requestUpdate)
+  window.visualViewport?.addEventListener('resize', requestUpdate)
 }
 
 function subscribe(listener: () => void) {

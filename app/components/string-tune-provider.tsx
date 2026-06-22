@@ -14,8 +14,8 @@ export default function StringTuneProvider({
     const stringTune = StringTune.getInstance()
 
     stringTune.use(StringSplit)
-    stringTune.scrollDesktopMode = 'disable'
-    stringTune.scrollMobileMode = 'disable'
+    stringTune.scrollDesktopMode = 'default'
+    stringTune.scrollMobileMode = 'default'
     stringTune.domBatcherEnabled = true
     stringTune.start(60)
 

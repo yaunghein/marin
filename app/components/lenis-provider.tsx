@@ -13,6 +13,11 @@ export default function LenisProvider({ children }: LenisProviderProps) {
   const pathname = usePathname()
 
   useEffect(() => {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
+    if (isMobile) {
+      return
+    }
+
     const lenis = new Lenis({
       lerp: 0.08,
       smoothWheel: true,

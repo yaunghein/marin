@@ -1,8 +1,8 @@
 'use client'
 
 import ScrollRevealSplitText from '@/app/components/scroll-reveal-split-text'
-import { subscribeScrollProgress } from '@/app/hooks/use-scroll-container-progress'
-import { useEffect, useRef } from 'react'
+import { useScrollProgressEffect } from '@/app/hooks/use-scroll-progress-effect'
+import { useRef } from 'react'
 
 type SectionHeroProps = {
   /** Scroll progress (0–1) on `#scroll-container` before role text appears */
@@ -24,19 +24,19 @@ export default function SectionHero({
 }: SectionHeroProps) {
   const contentRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const content = contentRef.current
-    if (!content) {
-      return
-    }
+  useScrollProgressEffect(
+    (progress) => {
+      const content = contentRef.current
+      if (!content) {
+        return
+      }
 
-    const end = Math.max(contentParallaxEnd, 0.001)
-
-    return subscribeScrollProgress((progress) => {
+      const end = Math.max(contentParallaxEnd, 0.001)
       const amount = contentParallaxOffset * clampProgress(progress / end)
       content.style.transform = `translate3d(0, ${amount}rem, 0)`
-    })
-  }, [contentParallaxOffset, contentParallaxEnd])
+    },
+    [contentParallaxOffset, contentParallaxEnd],
+  )
 
   return (
     <div className="w-full h-dvh grid place-items-center">
