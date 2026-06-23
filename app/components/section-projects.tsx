@@ -6,13 +6,11 @@ import {
   caseStudyButtonPath,
   caseStudyBlobViewBox,
 } from '@/app/components/case-study/case-study-blob-paths'
-import ScrollRevealClipFill from '@/app/components/scroll-reveal-clip-fill'
+import BlobMorphFill from '@/app/components/blob-morph-fill'
 import ScrollRevealSplitText from '@/app/components/scroll-reveal-split-text'
-import type { LeafAnimationTiming } from '@/app/hooks/use-scroll-container-progress'
 
 type SectionProjectsProps = {
   textRevealAt?: number
-  buttonBlobAnimation?: LeafAnimationTiming
   buttonBlobFill?: string
   buttonBlobStroke?: string
   buttonBlobHoverFill?: string
@@ -20,12 +18,7 @@ type SectionProjectsProps = {
 }
 
 export default function SectionProjects({
-  textRevealAt = 0.2,
-  buttonBlobAnimation = {
-    animationStart: 0.2,
-    animationEnd: 0.35,
-    fillDuration: 0.3,
-  },
+  textRevealAt = 0.52,
   buttonBlobFill = '#4A3A30',
   buttonBlobStroke = '#4A3A30',
   buttonBlobHoverFill = '#647C4C',
@@ -80,8 +73,9 @@ export default function SectionProjects({
             className="group relative mt-6 w-36 aspect-[1.872/1] flex items-center justify-center"
           >
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full">
-              <ScrollRevealClipFill
-                {...buttonBlobAnimation}
+              {/* TODO: restore ScrollRevealClipFill when scroll animation is ready */}
+              <BlobMorphFill
+                fillProgress={1}
                 viewBox={caseStudyBlobViewBox}
                 clipCx={caseStudyBlobClip.cx}
                 clipCy={caseStudyBlobClip.cy}

@@ -41,19 +41,19 @@ export default function HomeLeaves() {
       </div>
       <div
         id="leaf-two"
-        className="pointer-events-none absolute left-1/2 translate-x-[-90.5%] bottom-12 h-[140vh] aspect-[1/2.46]"
+        className="pointer-events-none absolute left-1/2 translate-x-[-90.5%] bottom-12 h-[132vh] aspect-[1/2.46]"
       >
         <LeafTwo animationEnd={isMobile ? 0.28 : 0.4} />
       </div>
       <div
         id="leaf-three"
-        className="pointer-events-none absolute left-1/2 translate-x-[-57%] bottom-12 h-[140vh] aspect-[1/1.376] md:h-[235vh]"
+        className="pointer-events-none absolute left-1/2 translate-x-[-57%] bottom-12 aspect-[1/1.376] h-[235vh]"
       >
         <LeafThree animationEnd={isMobile ? 0.42 : 0.9} />
       </div>
       <div
         id="leaf-four"
-        className="pointer-events-none absolute left-1/2 translate-x-[-33%] bottom-10 h-[155vh] aspect-[1/2.64] md:h-[265vh]"
+        className="pointer-events-none absolute left-1/2 translate-x-[-33%] bottom-10 aspect-[1/2.64] h-[275vh]"
       >
         <LeafFour animationEnd={isMobile ? 0.52 : 1} />
       </div>

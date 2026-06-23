@@ -9,14 +9,14 @@ const contactLinks = [
 ] as const
 
 type SectionContactProps = {
-  /** Scroll progress threshold when revealMode is "scroll". Contact sits at the end of the reverse scroll. */
+  /** Scroll progress threshold when revealMode is "scroll". Contact is the middle section in the reverse scroll. */
   revealAt?: number
   revealMode?: 'scroll' | 'inview'
   inviewThreshold?: number
 }
 
 export default function SectionContact({
-  revealAt = 0.52,
+  revealAt = 0.3,
   revealMode = 'inview',
   inviewThreshold = 0.15,
 }: SectionContactProps) {
@@ -44,7 +44,7 @@ export default function SectionContact({
             as="p"
             {...revealProps}
             splitUnit="line"
-            revealAt={0.3}
+            revealAt={0.22}
             duration={2}
             stagger={0.5}
             className="mt-4 text-[1.3125rem] font-medium leading-[1.23] text-foreground"
@@ -56,7 +56,7 @@ export default function SectionContact({
           </ScrollRevealSplitText>
         </div>
 
-        <div className="max-w-96 translate-x-[75%] translate-y-20">
+        <div className="max-w-96 translate-x-[75%] -translate-y-5">
           <ScrollRevealSplitText
             as="h2"
             {...revealProps}

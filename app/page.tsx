@@ -12,8 +12,8 @@ export default function Home() {
           id="leaf-container"
           className="relative top-0 left-0 right-0 w-full h-[300dvh]"
         >
-          <SectionContact />
           <SectionProjects />
+          <SectionContact />
           <SectionHero brandDesignerRevealAt={0.01} />
 
           <HomeLeaves />
