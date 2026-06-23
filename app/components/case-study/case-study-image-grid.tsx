@@ -10,24 +10,26 @@ type GridImage = {
 type CaseStudyImageGridProps = {
   images: GridImage[]
   columns?: 2 | 4
+  bleed?: boolean
 }
 
 export default function CaseStudyImageGrid({
   images,
   columns = 2,
+  bleed = true,
 }: CaseStudyImageGridProps) {
   return (
     <div
       className={
         columns === 4
-          ? 'grid grid-cols-4 mx-[-5.2rem]'
-          : 'grid grid-cols-2 mx-[-5.2rem]'
+          ? `grid grid-cols-4${bleed ? '' : ''}`
+          : `grid grid-cols-2${bleed ? '' : ''}`
       }
     >
       {images.map((image) => (
         <div
           key={image.src}
-          className={`relative w-full overflow-hidden ${image.aspect ?? 'aspect-755/425'}`}
+          className={`relative w-full overflow-hidden ${image.aspect ?? 'aspect-[1/0.562]'}`}
         >
           <Image
             src={image.src}

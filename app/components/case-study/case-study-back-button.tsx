@@ -18,7 +18,7 @@ export default function CaseStudyBackButton() {
     <Link
       href="/"
       aria-label="Go back Home"
-      className="group fixed top-12 left-[5.2rem] z-50 flex w-36 aspect-[1.872/1] items-center justify-center"
+      className="group fixed top-12 left-16 z-50 flex w-36 aspect-[1.872/1] items-center justify-center"
       style={{
         pointerEvents: fillProgress > 0.01 ? 'auto' : 'none',
       }}

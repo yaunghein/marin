@@ -1,34 +1,41 @@
 import type { ReactNode } from 'react'
-// import ScrollRevealSplitText from '@/app/components/scroll-reveal-split-text'
 
 type CaseStudySectionProps = {
   title: string
   japanese?: string
   body?: string
+  afterBody?: ReactNode
   bullets?: string[]
   steps?: { title: string; body: string }[]
   children?: ReactNode
   className?: string
+  sticky?: boolean
 }
 
 export default function CaseStudySection({
   title,
   japanese,
   body,
+  afterBody,
   bullets,
   steps,
   children,
   className = '',
+  sticky = true,
 }: CaseStudySectionProps) {
   return (
-    <section className={`mb-24 ${className}`}>
-      <div className="grid grid-cols-1 items-start gap-x-27.25 gap-y-6 lg:grid-cols-[36rem_1fr]">
-        <div>
+    <section className={`mb-32 last:mb-0 ${className}`}>
+      <div className="grid grid-cols-1 items-start gap-x-14 gap-y-6 lg:grid-cols-[32.6875rem_1fr]">
+        <div
+          className={
+            sticky ? 'lg:sticky lg:top-40 pb-20 lg:self-start' : undefined
+          }
+        >
           <h2 className="text-[3rem] font-medium leading-11.5 tracking-[-0.06rem]">
             {title}
           </h2>
           {japanese ? (
-            <p className="mt-6 text-2xl font-normal leading-8 tracking-[-0.06rem] max-w-140">
+            <p className="mt-2.5 text-2xl font-normal leading-8 tracking-[-0.06rem]">
               {japanese}
             </p>
           ) : null}
@@ -47,6 +54,14 @@ export default function CaseStudySection({
                 <li key={item}>{item}</li>
               ))}
             </ul>
+          ) : null}
+
+          {afterBody ? (
+            <div
+              className={`text-2xl font-medium leading-8 tracking-[-0.03rem] ${body || bullets || steps ? 'mt-8' : ''}`}
+            >
+              {afterBody}
+            </div>
           ) : null}
 
           {steps ? (
