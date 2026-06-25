@@ -20,6 +20,7 @@ type BlobMorphFillProps = {
   clipCircleRef?: RefObject<SVGCircleElement | null>
   /** Rendered inside the same clip path as the blob shape. */
   label?: string
+  labelClassName?: string
 }
 
 export default function BlobMorphFill({
@@ -39,6 +40,7 @@ export default function BlobMorphFill({
   clipTransition = false,
   clipCircleRef,
   label,
+  labelClassName = 'text-background',
 }: BlobMorphFillProps) {
   const clipPathId = useId().replace(/:/g, '')
   const morphPathId = useId().replace(/:/g, '')
@@ -103,7 +105,9 @@ export default function BlobMorphFill({
             width={viewWidth}
             height={viewHeight}
           >
-            <div className="flex h-full w-full items-center justify-center text-base font-medium leading-[1.23] text-background">
+            <div
+              className={`flex h-full w-full items-center justify-center text-base font-medium leading-[1.23] ${labelClassName}`}
+            >
               {label}
             </div>
           </foreignObject>

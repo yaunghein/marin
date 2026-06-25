@@ -24,14 +24,14 @@ export default function CaseStudySection({
   sticky = true,
 }: CaseStudySectionProps) {
   return (
-    <section className={`mb-32 last:mb-0 ${className}`}>
-      <div className="grid grid-cols-1 items-start gap-x-14 gap-y-6 lg:grid-cols-[32.6875rem_1fr]">
+    <section className={`mb-30 last:mb-0 ${className}`}>
+      <div className="grid grid-cols-1 items-start gap-x-14 gap-y-6 lg:grid-cols-[30.6875rem_1fr]">
         <div
           className={
-            sticky ? 'lg:sticky lg:top-40 pb-20 lg:self-start' : undefined
+            sticky ? 'lg:sticky lg:top-32 lg:self-start mb-14' : undefined
           }
         >
-          <h2 className="text-[3rem] font-medium leading-11.5 tracking-[-0.06rem]">
+          <h2 className="text-[3rem] font-medium leading-11.5 tracking-[-0.06rem] whitespace-nowrap">
             {title}
           </h2>
           {japanese ? (

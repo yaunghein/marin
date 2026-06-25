@@ -46,7 +46,7 @@ export default function SectionProjects({
 
         <div className="relative w-[32.4rem] aspect-519/435 shrink-0">
           <Image
-            src="/images/project-placeholder.png"
+            src="/images/project-placeholder-5.png"
             alt="Exit case study — woman kneeling beside a vintage fan"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
